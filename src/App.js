@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import React, { useState } from "react"
 import { Container, Row, Col ,Card,Form,InputGroup, Button} from "react-bootstrap";
@@ -7,18 +6,25 @@ function App() {
 
   const [amount,setAmount] = useState('');
   const [period,setPeriod] = useState('');
-  const [rate,setRate] = useState('');
+  const [rate,setRate] = useState('')
   const [tier,setTier] = useState('');
+
+  
+
+
 
 
   const [redeemAmount,setRedeemAmount] = useState('');
 
 
   const handleCalculate = () => {
-    const anchorRate = 19.54;
+    //const anchorRate = 19.54;
     const x= amount*period;
     setRedeemAmount(x)
+    console.log(redeemAmount,tier)
   }
+
+ 
 
   return (
     <div className="App-header">
@@ -79,13 +85,17 @@ function App() {
                                 <br/>
                                 <Form.Group controlId="timePeriod">
                                     <Form.Label className="lead font-weight-bold">
-                                        Interest Rate
+                                        Annual Interest Rate
                                     </Form.Label>
                                     <br/>
-                                   {tier==="Blue" ? <h3>10%</h3>:<></>}
-                                   {tier==="Gold" ? <h3>12%</h3>:<></>}
-                                   {tier==="Emerald" ? <h3>14%</h3>:<></>}
-                                   {tier==="Diamond" ? <h3>16%</h3>:<></>}
+                                    <Form.Control
+                                        size="lg"
+                                        type="number"
+                                        placeholder={ `annual rate` }
+                                        value={rate}
+                                        onChange={(e)=>setRate(e.target.value)}
+                                    />
+
                                 </Form.Group>
                             </Form>
                             

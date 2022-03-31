@@ -70,7 +70,7 @@ function App() {
                                 <Col md={8}>
                                    
                                     <h1 className="text-white font-weight-bold pb-3">
-                                        Estimate your Yieldly rewards in seconds!
+                                        Estimate your  Rewards/Interests in seconds!
                                     </h1>
                                     <h4>Assuming anchor rate (1 aUST = 1.222 UST) and APY = 19.49%</h4>
                                     <h6>daily_rate = ((annual rate)/100 +1)**(1/365) -1)*100</h6>

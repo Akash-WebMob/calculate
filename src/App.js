@@ -42,7 +42,7 @@ function App() {
 
       const daily_rate = calculateDailyRate(rate)
       const actual_amount = deduct_tax(amount)
-      
+
       const redeem_amount = actual_amount*Math.pow((1+ daily_rate/100),period)
       setRedeemAmount(redeem_amount)
       const anchorRate = 19.49;
@@ -56,7 +56,7 @@ function App() {
 
       setConversionRate(conversion_rate**365)
 
-      setTokenMinted(amount/(conversion_rate*1.222))
+      setTokenMinted(actual_amount/(conversion_rate*1.222))
 
   }
 
@@ -73,6 +73,11 @@ function App() {
                                         Estimate your Yieldly rewards in seconds!
                                     </h1>
                                     <h4>Assuming anchor rate (1 aUST = 1.222 UST) and APY = 19.49%</h4>
+                                    <h6>daily_rate = ((annual rate)/100 +1)**(1/365) -1)*100</h6>
+                                    <h6>actual_amount = amount_deposited - tax</h6>
+                                    <h6>redeem_amount = actual_amount*Math.pow((1+ daily_rate/100),period)</h6>
+                                    <h6>annual conversion_rate = ((1+ daily_rate/100)/(1 + daily_anchor_rate/100))**365</h6>
+                                    <h6>token minted = actual_amount/(annual_conversion_rate*1.222)</h6>
                                 </Col>
                             </Row>
           </Container>

@@ -1,5 +1,6 @@
 import './App.css';
 import React, { useState } from "react"
+import BN from 'bn.js';
 import { Container, Row, Col ,Card,Form,InputGroup, Button} from "react-bootstrap";
 
 function App() {
@@ -8,20 +9,55 @@ function App() {
   const [period,setPeriod] = useState('');
   const [rate,setRate] = useState('')
   const [tier,setTier] = useState('');
+  const [conversionRate,setConversionRate] = useState('')
+  const [tokenMinted,setTokenMinted] = useState('')
 
-  
-
-
+  const [anchorRedeemAmount,setAnchorRedeemAmount] = useState('');
+ 
 
 
   const [redeemAmount,setRedeemAmount] = useState('');
 
+  const calculateDailyRate = (rate) => {
+    const temp = ((rate/100) + 1);
+    const daily_rate =(Math.pow(temp,1/365)-1)*100;
+    return daily_rate;
+  }
+
+  const deduct_tax = (amount) => {
+    const DECIMAL_FRACTION = new BN("1000000000000000000");
+    const tax = Math.min(
+      amount -
+      new BN(amount)
+        .mul(DECIMAL_FRACTION)
+        .div(DECIMAL_FRACTION.div(new BN(1000)).add(DECIMAL_FRACTION))
+        .toNumber(),
+      1000000
+    );
+    return amount - tax;
+  }
+
 
   const handleCalculate = () => {
-    //const anchorRate = 19.54;
-    const x= amount*period;
-    setRedeemAmount(x)
-    console.log(redeemAmount,tier)
+
+      const daily_rate = calculateDailyRate(rate)
+      const actual_amount = deduct_tax(amount)
+      
+      const redeem_amount = actual_amount*Math.pow((1+ daily_rate/100),period)
+      setRedeemAmount(redeem_amount)
+      const anchorRate = 19.49;
+
+      const daily_anchor_rate = calculateDailyRate(anchorRate)
+      const anchor_redeem_amount =  actual_amount*Math.pow((1+ daily_anchor_rate/100),period)
+
+      setAnchorRedeemAmount(anchor_redeem_amount)
+      
+      const conversion_rate = (1+ daily_rate/100)/(1 + daily_anchor_rate/100)
+
+      setConversionRate(conversion_rate**365)
+
+      setTokenMinted(amount/(conversion_rate*1.222))
+
   }
 
  
@@ -36,7 +72,7 @@ function App() {
                                     <h1 className="text-white font-weight-bold pb-3">
                                         Estimate your Yieldly rewards in seconds!
                                     </h1>
-                                    <h4>Assuming anchor rate (1 aUST = 1.22 UST)</h4>
+                                    <h4>Assuming anchor rate (1 aUST = 1.222 UST) and APY = 19.49%</h4>
                                 </Col>
                             </Row>
           </Container>
@@ -100,7 +136,11 @@ function App() {
                             </Form>
                             
                             <Button onClick={handleCalculate}>Calculate</Button>
-                            
+                            <h3>Token Minted at time of deposit(Day 0) = {tokenMinted}</h3>
+                            <h3>redeem_amount = {redeemAmount}</h3>
+                            <h3>anchor_amount = {anchorRedeemAmount}</h3>
+                            <h3>amount in pool = {anchorRedeemAmount-redeemAmount}</h3>
+                            <h3>annual conversion_rate of {tier} = {conversionRate*1.222} UST</h3>
                         </Card>
                     </Col>
       </Row>

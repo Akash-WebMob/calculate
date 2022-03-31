@@ -8,7 +8,7 @@ function App() {
   const [amount,setAmount] = useState('');
   const [period,setPeriod] = useState('');
   const [rate,setRate] = useState('')
-  const [tier,setTier] = useState('');
+  const [tier,setTier] = useState('Blue');
   const [conversionRate,setConversionRate] = useState('')
   const [tokenMinted,setTokenMinted] = useState('')
 

@@ -1,15 +1,21 @@
 import './App.css';
 import React, { useState } from "react"
-import BN from 'bn.js';
+//import BN from 'bn.js';
 import { Container, Row, Col ,Card,Form,InputGroup, Button} from "react-bootstrap";
 
 function App() {
 
   const [amount,setAmount] = useState('');
+  const [dailyRate,setDailyRate] = useState('');
+  const [anchorDailyRate,setAnchorDailyRate] = useState('');
+
+
   const [period,setPeriod] = useState('');
-  const [rate,setRate] = useState('')
+  //const [rate,setRate] = useState('')
   const [tier,setTier] = useState('Blue');
   const [conversionRate,setConversionRate] = useState('')
+  const [dailyConversionRate,setDailyConversionRate] = useState('')
+
   const [tokenMinted,setTokenMinted] = useState('')
 
   const [anchorRedeemAmount,setAnchorRedeemAmount] = useState('');
@@ -24,41 +30,58 @@ function App() {
     return daily_rate;
   }
 
-  const deduct_tax = (amount) => {
-    const DECIMAL_FRACTION = new BN("1000000000000000000");
-    const tax = Math.min(
-      amount -
-      new BN(amount)
-        .mul(DECIMAL_FRACTION)
-        .div(DECIMAL_FRACTION.div(new BN(1000)).add(DECIMAL_FRACTION))
-        .toNumber(),
-      1000000
-    );
-    return amount - tax;
-  }
+//   const deduct_tax = (amount) => {
+//     const DECIMAL_FRACTION = new BN("1000000000000000000");
+//     const tax = Math.min(
+//       amount -
+//       new BN(amount)
+//         .mul(DECIMAL_FRACTION)
+//         .div(DECIMAL_FRACTION.div(new BN(1000)).add(DECIMAL_FRACTION))
+//         .toNumber(),
+//       1000000
+//     );
+//     return amount - tax;
+//   }
+
+  // 1kbust = 0.99 aust
+  // 1asut = 1.23 ust
+  //1kbust = 0.99 *1.23 ust = 1.21
+  //100/1.21 =
 
 
   const handleCalculate = () => {
 
-      const daily_rate = calculateDailyRate(rate)
-      const actual_amount = deduct_tax(amount)
+      const daily_rate = calculateDailyRate(interestMap[tier])
+      setDailyRate(daily_rate)
+      //const actual_amount = deduct_tax(amount)
 
-      const redeem_amount = actual_amount*Math.pow((1+ daily_rate/100),period)
+      const redeem_amount = amount*Math.pow((1+ daily_rate/100),period)
       setRedeemAmount(redeem_amount)
       const anchorRate = 19.49;
 
       const daily_anchor_rate = calculateDailyRate(anchorRate)
-      const anchor_redeem_amount =  actual_amount*Math.pow((1+ daily_anchor_rate/100),period)
+      setAnchorDailyRate(daily_anchor_rate)
+      //console.log(daily_anchor_rate)
+      const anchor_redeem_amount =  amount*Math.pow((1+ daily_anchor_rate/100),period)
 
       setAnchorRedeemAmount(anchor_redeem_amount)
       
       const conversion_rate = (1+ daily_rate/100)/(1 + daily_anchor_rate/100)
+      setDailyConversionRate(conversion_rate)
 
       setConversionRate(conversion_rate**365)
 
-      setTokenMinted(actual_amount/(conversion_rate*1.222))
+      setTokenMinted(amount/(conversion_rate*1.222))
 
   }
+
+  const interestMap = {
+    'Blue': 10,
+    'Gold': 12,
+    'Emerald': 14,
+    'Diamond': 16
+  };
+
 
  
 
@@ -133,14 +156,19 @@ function App() {
                                         size="lg"
                                         type="number"
                                         placeholder={ `annual rate` }
-                                        value={rate}
-                                        onChange={(e)=>setRate(e.target.value)}
+                                        value={interestMap[tier]}
+                                        //onChange={(e)=>setRate(e.target.value)}
+                                        disabled
+
                                     />
 
                                 </Form.Group>
                             </Form>
                             
                             <Button onClick={handleCalculate}>Calculate</Button>
+                            <h6>Daily Rate : {dailyRate}</h6>
+                            <h6>Anchor Daily Rate: {anchorDailyRate}</h6>
+                            <h6>Daily Conversion Rate of {tier} : {dailyConversionRate}</h6>
                             <h3>Token Minted at time of deposit(Day 0) = {tokenMinted}</h3>
                             <h3>redeem_amount = {redeemAmount}</h3>
                             <h3>anchor_amount = {anchorRedeemAmount}</h3>

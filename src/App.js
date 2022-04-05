@@ -1,6 +1,6 @@
 import './App.css';
 import React, { useState } from "react"
-import BN from 'bn.js';
+//import BN from 'bn.js';
 import { Container, Row, Col ,Card,Form,InputGroup, Button} from "react-bootstrap";
 
 function App() {

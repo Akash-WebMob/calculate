@@ -58,7 +58,7 @@ function App() {
 
       const redeem_amount = amount*Math.pow((1+ daily_rate/100),period)
       setRedeemAmount(redeem_amount)
-      const anchorRate = 20.29;
+      const anchorRate = 19.69;
 
       const daily_anchor_rate = calculateDailyRate(anchorRate)
       setAnchorDailyRate(daily_anchor_rate)
@@ -96,7 +96,7 @@ function App() {
                                     <h1 className="text-white font-weight-bold pb-3">
                                         Estimate your  Rewards/Interests in seconds!
                                     </h1>
-                                    <h4>Assuming anchor rate (1 aUST = 1.245171296747347647 UST) and APY = 20.29%</h4>
+                                    <h4>Assuming anchor rate (1 aUST = 1.245171296747347647 UST) and APY = 19.69%</h4>
                                     <h6>daily_rate = ((annual rate)/100 +1)**(1/365) -1)*100</h6>
                                     <h6>actual_amount = amount_deposited - tax</h6>
                                     <h6>redeem_amount = actual_amount*Math.pow((1+ daily_rate/100),period)</h6>

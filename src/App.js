@@ -1,6 +1,6 @@
 import './App.css';
 import React, { useState } from "react"
-//import BN from 'bn.js';
+import BN from 'bn.js';
 import { Container, Row, Col ,Card,Form,InputGroup, Button} from "react-bootstrap";
 
 function App() {
@@ -53,11 +53,12 @@ function App() {
 
       const daily_rate = calculateDailyRate(interestMap[tier])
       setDailyRate(daily_rate)
-      //const actual_amount = deduct_tax(amount)
+      //const actual_amount = amount - 0.036326384 //deduct_tax(amount)
+      //console.log('actual',actual_amount)
 
       const redeem_amount = amount*Math.pow((1+ daily_rate/100),period)
       setRedeemAmount(redeem_amount)
-      const anchorRate = 19.49;
+      const anchorRate = 20.29;
 
       const daily_anchor_rate = calculateDailyRate(anchorRate)
       setAnchorDailyRate(daily_anchor_rate)
@@ -71,7 +72,7 @@ function App() {
 
       setConversionRate(conversion_rate**365)
 
-      setTokenMinted(amount/(conversion_rate*1.222))
+      setTokenMinted(amount/(conversion_rate*1.245171296747347647))
 
   }
 
@@ -95,12 +96,12 @@ function App() {
                                     <h1 className="text-white font-weight-bold pb-3">
                                         Estimate your  Rewards/Interests in seconds!
                                     </h1>
-                                    <h4>Assuming anchor rate (1 aUST = 1.222 UST) and APY = 19.49%</h4>
+                                    <h4>Assuming anchor rate (1 aUST = 1.245171296747347647 UST) and APY = 20.29%</h4>
                                     <h6>daily_rate = ((annual rate)/100 +1)**(1/365) -1)*100</h6>
                                     <h6>actual_amount = amount_deposited - tax</h6>
                                     <h6>redeem_amount = actual_amount*Math.pow((1+ daily_rate/100),period)</h6>
                                     <h6>annual conversion_rate = ((1+ daily_rate/100)/(1 + daily_anchor_rate/100))**365</h6>
-                                    <h6>token minted = actual_amount/(annual_conversion_rate*1.222)</h6>
+                                    <h6>token minted = actual_amount/(annual_conversion_rate*1.245171296747347647)</h6>
                                 </Col>
                             </Row>
           </Container>
@@ -173,7 +174,7 @@ function App() {
                             <h3>redeem_amount = {redeemAmount}</h3>
                             <h3>anchor_amount = {anchorRedeemAmount}</h3>
                             <h3>amount in pool = {anchorRedeemAmount-redeemAmount}</h3>
-                            <h3>annual conversion_rate of {tier} = {conversionRate*1.222} UST</h3>
+                            <h3>annual conversion_rate of {tier} = {conversionRate*1.245171296747347647} UST</h3>
                         </Card>
                     </Col>
       </Row>

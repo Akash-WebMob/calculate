@@ -8,11 +8,13 @@ function App() {
   const [amount,setAmount] = useState('');
   const [dailyRate,setDailyRate] = useState('');
   const [anchorDailyRate,setAnchorDailyRate] = useState('');
-
+  const [anchorRate,setAnchorRate] = useState('');
 
   const [period,setPeriod] = useState('');
   //const [rate,setRate] = useState('')
   const [tier,setTier] = useState('Blue');
+  const [tax,setTax] = useState('Blue');
+
   const [conversionRate,setConversionRate] = useState('')
   const [dailyConversionRate,setDailyConversionRate] = useState('')
 
@@ -53,26 +55,25 @@ function App() {
 
       const daily_rate = calculateDailyRate(interestMap[tier])
       setDailyRate(daily_rate)
-      //const actual_amount = amount - 0.036326384 //deduct_tax(amount)
+      const actual_amount = amount - tax //deduct_tax(amount)
       //console.log('actual',actual_amount)
 
-      const redeem_amount = amount*Math.pow((1+ daily_rate/100),period)
+      const redeem_amount = actual_amount*Math.pow((1+ daily_rate/100),period)
       setRedeemAmount(redeem_amount)
-      const anchorRate = 19.69;
 
       const daily_anchor_rate = calculateDailyRate(anchorRate)
       setAnchorDailyRate(daily_anchor_rate)
       //console.log(daily_anchor_rate)
-      const anchor_redeem_amount =  amount*Math.pow((1+ daily_anchor_rate/100),period)
+      const anchor_redeem_amount = actual_amount*Math.pow((1+ daily_anchor_rate/100),period)
 
       setAnchorRedeemAmount(anchor_redeem_amount)
       
       const conversion_rate = (1+ daily_rate/100)/(1 + daily_anchor_rate/100)
       setDailyConversionRate(conversion_rate)
 
-      setConversionRate(conversion_rate**365)
+      setConversionRate(conversion_rate**period)
 
-      setTokenMinted(amount/(conversion_rate*1.245171296747347647))
+      setTokenMinted(actual_amount/(conversion_rate*1.245171296747347647))
 
   }
 
@@ -93,15 +94,15 @@ function App() {
                             <Row className="my-1">
                                 <Col md={8}>
                                    
-                                    <h1 className="text-white font-weight-bold pb-3">
+                                    <h1 >
                                         Estimate your  Rewards/Interests in seconds!
                                     </h1>
-                                    <h4>Assuming anchor rate (1 aUST = 1.245171296747347647 UST) and APY = 19.69%</h4>
-                                    <h6>daily_rate = ((annual rate)/100 +1)**(1/365) -1)*100</h6>
-                                    <h6>actual_amount = amount_deposited - tax</h6>
-                                    <h6>redeem_amount = actual_amount*Math.pow((1+ daily_rate/100),period)</h6>
-                                    <h6>annual conversion_rate = ((1+ daily_rate/100)/(1 + daily_anchor_rate/100))**365</h6>
-                                    <h6>token minted = actual_amount/(annual_conversion_rate*1.245171296747347647)</h6>
+                                    <h4>Assuming anchor rate (1 aUST = 1.245171296747347647 UST) and APY = 19.96%</h4>
+                                    <h5 style={{color : 'greenyellow'}}>daily_rate = ((annual rate)/100 +1)^(1/365) -1)*100</h5>
+                                    <h5>actual_amount = amount_deposited - tax</h5>
+                                    <h5 style={{color : 'cyan'}}>redeem_amount = actual_amount*[(1+ daily_rate/100)^period]</h5>
+                                    <h5>conversion_rate = [(1+ daily_rate/100)/(1 + daily_anchor_rate/100)]^period</h5>
+                                    <h5 style={{color : 'orange'}}>token minted = actual_amount/(conversion_rate*1.245171296747347647)</h5>
                                 </Col>
                             </Row>
           </Container>
@@ -125,6 +126,20 @@ function App() {
                                             onChange={(e)=> setAmount(e.target.value)}
                                         />
                                     </InputGroup>
+                                </Form.Group>
+                                <Form.Group controlId="timePeriod">
+                                    <Form.Label className="lead font-weight-bold">
+                                        Tax
+                                    </Form.Label>
+                                    <br/>
+                                    <Form.Control
+                                        size="lg"
+                                        type="number"
+                                        placeholder={ `Tax` }
+                                        value={tax}
+                                        onChange={(e)=>setTax(e.target.value)}
+                                    />
+                                   
                                 </Form.Group>
                                 <Form.Group controlId="timePeriod">
                                     <Form.Label className="lead font-weight-bold">
@@ -164,17 +179,32 @@ function App() {
                                     />
 
                                 </Form.Group>
+                                <Form.Group controlId="timePeriod">
+                                    <Form.Label className="lead font-weight-bold">
+                                        Annual Anchor Rate
+                                    </Form.Label>
+                                    <br/>
+                                    <Form.Control
+                                        size="lg"
+                                        type="number"
+                                        placeholder={ `annual rate` }
+                                        value={anchorRate}
+                                        onChange={(e)=>setAnchorRate(e.target.value)}
+
+                                    />
+
+                                </Form.Group>
                             </Form>
                             
                             <Button onClick={handleCalculate}>Calculate</Button>
-                            <h6>Daily Rate : {dailyRate}</h6>
-                            <h6>Anchor Daily Rate: {anchorDailyRate}</h6>
-                            <h6>Daily Conversion Rate of {tier} : {dailyConversionRate}</h6>
+                            <h5>Daily Rate = {dailyRate}</h5>
+                            <h5>Anchor Daily Rate = {anchorDailyRate}</h5>
+                            <h5>Daily Conversion Rate of {tier} =  {dailyConversionRate}</h5>
                             <h3>Token Minted at time of deposit(Day 0) = {tokenMinted}</h3>
                             <h3>redeem_amount = {redeemAmount}</h3>
                             <h3>anchor_amount = {anchorRedeemAmount}</h3>
                             <h3>amount in pool = {anchorRedeemAmount-redeemAmount}</h3>
-                            <h3>annual conversion_rate of {tier} = {conversionRate*1.245171296747347647} UST</h3>
+                            <h3>Conversion Rate of {tier} at end of {period} days = {conversionRate*1.245171296747347647} UST</h3>
                         </Card>
                     </Col>
       </Row>

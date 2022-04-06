@@ -13,7 +13,9 @@ function App() {
   const [period,setPeriod] = useState('');
   //const [rate,setRate] = useState('')
   const [tier,setTier] = useState('Blue');
-  const [tax,setTax] = useState('Blue');
+  const [factor,setFactor] = useState('');
+
+  const [tax,setTax] = useState('');
 
   const [conversionRate,setConversionRate] = useState('')
   const [dailyConversionRate,setDailyConversionRate] = useState('')
@@ -97,12 +99,12 @@ function App() {
                                     <h1 >
                                         Estimate your  Rewards/Interests in seconds!
                                     </h1>
-                                    <h4>Assuming anchor rate (1 aUST = 1.245171296747347647 UST) and APY = 19.96%</h4>
                                     <h5 style={{color : 'greenyellow'}}>daily_rate = ((annual rate)/100 +1)^(1/365) -1)*100</h5>
                                     <h5>actual_amount = amount_deposited - tax</h5>
                                     <h5 style={{color : 'cyan'}}>redeem_amount = actual_amount*[(1+ daily_rate/100)^period]</h5>
                                     <h5>conversion_rate = [(1+ daily_rate/100)/(1 + daily_anchor_rate/100)]^period</h5>
-                                    <h5 style={{color : 'orange'}}>token minted = actual_amount/(conversion_rate*1.245171296747347647)</h5>
+                                    <h5>conversion_factor = aUST to Ust</h5>
+                                    <h5 style={{color : 'orange'}}>token minted = actual_amount/(conversion_rate*(conversion_factor))</h5>
                                 </Col>
                             </Row>
           </Container>
@@ -111,6 +113,51 @@ function App() {
       <Col md="6">
                         <Card>
                             <Form>
+                                <h4>Assumed Parameters :</h4>
+                                <Form.Group controlId="timePeriod">
+                                    <Form.Label className="lead font-weight-bold">
+                                        Tax
+                                    </Form.Label>
+                                    <br/>
+                                    <Form.Control
+                                        size="lg"
+                                        type="number"
+                                        placeholder={ `Tax` }
+                                        value={tax}
+                                        onChange={(e)=>setTax(e.target.value)}
+                                    />
+                                   
+                                </Form.Group>
+                                <Form.Group controlId="timePeriod">
+                                    <Form.Label className="lead font-weight-bold">
+                                        Conversion Factor
+                                    </Form.Label>
+                                    <br/>
+                                    <Form.Control
+                                        size="lg"
+                                        type="number"
+                                        placeholder={ `conversion factor` }
+                                        value={factor}
+                                        onChange={(e)=>setFactor(e.target.value)}
+                                    />
+                                   
+                                </Form.Group>
+                                <Form.Group controlId="timePeriod">
+                                    <Form.Label className="lead font-weight-bold">
+                                        Annual Anchor Rate
+                                    </Form.Label>
+                                    <br/>
+                                    <Form.Control
+                                        size="lg"
+                                        type="number"
+                                        placeholder={ `annual rate` }
+                                        value={anchorRate}
+                                        onChange={(e)=>setAnchorRate(e.target.value)}
+
+                                    />
+
+                                </Form.Group>
+                                <h4>Actual Parameters : </h4>
                                 <Form.Group controlId="tickets">
                                     <Form.Label 
                                         className="lead font-weight-bold">
@@ -127,20 +174,7 @@ function App() {
                                         />
                                     </InputGroup>
                                 </Form.Group>
-                                <Form.Group controlId="timePeriod">
-                                    <Form.Label className="lead font-weight-bold">
-                                        Tax
-                                    </Form.Label>
-                                    <br/>
-                                    <Form.Control
-                                        size="lg"
-                                        type="number"
-                                        placeholder={ `Tax` }
-                                        value={tax}
-                                        onChange={(e)=>setTax(e.target.value)}
-                                    />
-                                   
-                                </Form.Group>
+                                
                                 <Form.Group controlId="timePeriod">
                                     <Form.Label className="lead font-weight-bold">
                                         Time period in Days
@@ -179,21 +213,7 @@ function App() {
                                     />
 
                                 </Form.Group>
-                                <Form.Group controlId="timePeriod">
-                                    <Form.Label className="lead font-weight-bold">
-                                        Annual Anchor Rate
-                                    </Form.Label>
-                                    <br/>
-                                    <Form.Control
-                                        size="lg"
-                                        type="number"
-                                        placeholder={ `annual rate` }
-                                        value={anchorRate}
-                                        onChange={(e)=>setAnchorRate(e.target.value)}
-
-                                    />
-
-                                </Form.Group>
+                                
                             </Form>
                             
                             <Button onClick={handleCalculate}>Calculate</Button>
@@ -204,7 +224,7 @@ function App() {
                             <h3>redeem_amount = {redeemAmount}</h3>
                             <h3>anchor_amount = {anchorRedeemAmount}</h3>
                             <h3>amount in pool = {anchorRedeemAmount-redeemAmount}</h3>
-                            <h3>Conversion Rate of {tier} at end of {period} days = {conversionRate*1.245171296747347647} UST</h3>
+                            <h3>Conversion Rate of {tier} at end of {period} days = {conversionRate*factor} UST</h3>
                         </Card>
                     </Col>
       </Row>

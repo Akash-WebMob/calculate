@@ -116,7 +116,7 @@ function App() {
                                 <h4>Assumed Parameters :</h4>
                                 <Form.Group controlId="timePeriod">
                                     <Form.Label className="lead font-weight-bold">
-                                        Tax
+                                        Tax (by observing it is close to 8% per 100 deposit )
                                     </Form.Label>
                                     <br/>
                                     <Form.Control

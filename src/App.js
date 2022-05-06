@@ -75,7 +75,7 @@ function App() {
 
       setConversionRate(conversion_rate**period)
 
-      setTokenMinted(actual_amount/(conversion_rate*1.245171296747347647))
+      setTokenMinted(actual_amount/(conversion_rate*factor))
 
   }
 
